@@ -32,8 +32,9 @@
 				<p>L'architecture logicielle</p>
 				<img src="./images/couches01.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
             </section>
+
 			<section>
-				<p>Stratégies antagonistes pour résoudre un problème</p>
+				<p>Deux axes pour résoudre un problème</p>
 				<small>
 				<ul>
 					<li>Décomposer un problème afin de résoudre une série de problèmes plus simples</li>
@@ -42,7 +43,7 @@
 				</small>
 			</section>
 			<section>
-				<p><small>«If you can't solve a problem, then there is an easier problem you can't solve: find it"»</small></p>
+				<p><small>«If you can't solve a problem, then there is an easier problem you can't solve: find it.»</small></p>
 				<small><a href="https://en.wikipedia.org/wiki/How_to_Solve_It">[en.wikipedia.org/wiki/How_to_Solve_It]</a></small>
 			</section>
 			<section>
@@ -58,23 +59,33 @@
 				<img src="./images/onion01.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
 			</section>
 			<section>
+				<p>Principes fondamentaux de la <br>Conception Architectural</p>
+				<small>
+					<ul>
+						<li>Faible couplage</li>
+						<li>Haute cohésion</li>
+						<li>Protection des variations (interfaces, indirection, consultation de services, etc.)</li>
+					</ul>
+				</small>
+			</section>
+			<section>
 				<p>Visibilité entre les objets</p>
 				<p><small>Aptitude d'un objet à voir un autre objet et donc concrètement d'avoir une référence à un autre objet</small></p>
 			</section>
 			<section>
-				<p>Types de visibilité entre les objets</p>
+				<p>Types de visibilité entre les objets <b>a</b> et <b>b</b></p>
 				<small>
 					<ul>
-						<li> <b><span class="couleur1">Visibilité d'attribut</span></b>: B est un attribut de A </li>
-						<li> <b><span class="couleur1">Visibilité de paramètre</span></b>: B est fourni comme paramètre à une méthode de A </li>
-						<li> <b><span class="couleur1">Visibilité locale</span></b>: B est un objet local (et non un paramètre) dans une méthode de A </li>
-						<li> <b><span class="couleur1">Visibilité globale</span></b>: B est visibile par tous les objets </li>
+						<li> <b><span class="couleur1">Visibilité d'attribut</span></b>: <b>b</b> est un attribut de <b>a</b> </li>
+						<li> <b><span class="couleur1">Visibilité de paramètre</span></b>: <b>b</b> est fourni comme paramètre à une méthode de <b>a</b> </li>
+						<li> <b><span class="couleur1">Visibilité locale</span></b>: <b>b</b> est un objet local (et non un paramètre) dans une méthode de <b>a</b> </li>
+						<li> <b><span class="couleur1">Visibilité globale</span></b>: <b>b</b> est visibile par tous les objets </li>
 					</ul>
 				</small>
 			</section>
 			<section>
 				<p>Dépendance (couplage) entre les classes</p>
-				<p><small>Un classe est couplée à une autre classe ou en dépend</small></p>
+				<p><small>Une classe est couplée à une autre classe ou en dépend</small></p>
 			</section>
 			<section>
 				<p>Types de dépendances entre les classes</p> 
@@ -98,8 +109,13 @@
 				</small>
 				<br>
 				<br>
-				<img src="./images/Visibilite01.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+				<img src="./images/Visibilite02.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
 			</section>
+			<section>
+				<p>Architecture client/serveur (2 tiers)</p>
+				<img src="./images/deuxTiers.png" style="height: 450px; margin: 0 auto 4rem auto; background: transparent;">
+			</section>
+
 			
 
 		<script src="dist/reveal.js"></script>
