@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Modèle architectural</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/reveal-override.css"/>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			<section>
+				<img src="./images/tourEiffel.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				<h3>Modèle architectural</h3>
+				<p>
+					<small> <span style="color:rgb(50, 80, 119);">Eric Demers, Michel Gagnon et Lévis Thériault</span>    </small>
+				</p>
+			</section>
+            <section>
+				<p>Le processus de conception</p>
+				<img src="./images/processus.png" style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+			<section>
+				<p>L'architecture logicielle</p>
+				<img src="./images/couches01.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+			<section>
+				<p>Stratégies antagonistes pour résoudre un problème</p>
+				<small>
+				<ul>
+					<li>Décomposer un problème afin de résoudre une série de problèmes plus simples</li>
+					<li>Résoudre d'abord un problème plus général</li>
+				</ul>
+				</small>
+			</section>
+			<section>
+				<p><small>«If you can't solve a problem, then there is an easier problem you can't solve: find it"»</small></p>
+				<small><a href="https://en.wikipedia.org/wiki/How_to_Solve_It">[en.wikipedia.org/wiki/How_to_Solve_It]</a></small>
+			</section>
+			<section>
+				<p><small>«Au lieu de résoudre un problème spécifique, qui semblerait intuitivement plus facile, il peut être plus facile de résoudre un problème plus général, qui couvre les spécificités de la solution recherchée.»</small> </p>
+				<p><small><a href="https://en.wikipedia.org/wiki/Inventor%27s_paradox">[en.wikipedia.org/wiki/Inventor%27s_paradox]</a></small></p>
+			</section>
+			<section>
+				<p>Architecture classique en couches</p>
+				<img src="./images/couches02.png" style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+			</section>
+			<section>
+				<p>Architecture en onion (Clean Architecture)</p>
+				<img src="./images/onion01.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+			</section>
+			<section>
+				<p>Visibilité entre les objets</p>
+				<p><small>Aptitude d'un objet à voir un autre objet et donc concrètement d'avoir une référence à un autre objet</small></p>
+			</section>
+			<section>
+				<p>Types de visibilité entre les objets</p>
+				<small>
+					<ul>
+						<li> <b><span class="couleur1">Visibilité d'attribut</span></b>: B est un attribut de A </li>
+						<li> <b><span class="couleur1">Visibilité de paramètre</span></b>: B est fourni comme paramètre à une méthode de A </li>
+						<li> <b><span class="couleur1">Visibilité locale</span></b>: B est un objet local (et non un paramètre) dans méthode de A </li>
+						<li> <b><span class="couleur1">Visibilité globale</span></b>: B est visibile par tous les objets </li>
+					</ul>
+				</small>
+			</section>
+			<section>
+				<p>Dépendance (couplage) entre les classes</p>
+				<p><small>Un classe est couplée à une autre classe ou en dépend</small></p>
+			</section>
+			<section>
+				<p>Types de dépendances entre les classes</p> 
+				<small>
+					<ul>
+						<li> <b><span class="couleur1">Super-classe ou interface</span></b>: Le fournisseur est une super-classe ou une interface </li>
+						<li> <b><span class="couleur1">Attribut</span></b>: Le fournisseur est un attribut de la classe</li>
+						<li> <b><span class="couleur1">Méthode</span></b>: Le fournisseur est un paramètre ou une valeur de retour d'une méthode</li>
+						<li> <b><span class="couleur1">Variable</span></b>: Le fournisseur est une variable utilisée localement dans une méthode</li>
+
+					</ul>
+				</small>			
+			</section>
+			<section>
+				<p>Distinguez dépendance (couplage) entre les classes et visibilité entre les objets (instances de classes)</p>
+				<small>
+					<ul>
+						<li>Est-ce que la classe <b>A</b> est dépendante de la classe <b>C</b>?</li>
+						<li>Est-ce que l'objet <b>a</b> peut voir (accéder à) l'objet <b>c</b>?</li>
+					</ul>
+				</small>
+				<br>
+				<br>
+				<img src="./images/Visibilite01.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+			</section>
+			
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
