@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Patrons de conception</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/reveal-override.css"/>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			<section>
+				<img src="./images/GoFBook.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				<h3>Design Patterns - Partie 1</h3>
+				<p>
+					<small> <span style="color:rgb(50, 80, 119);">Eric Demers, Michel Gagnon et Lévis Thériault</span>    </small>
+				</p>
+            </section>
+
+			<section>
+				<h2>Design Patterns <br> <small>Elements of Reusable Object-Oriented Software</small></h2>
+				<small>
+				<ul>
+					<li>4 co-auteurs d'où le surnom GoF (Gang of Four) </li>
+					<li>23 patrons de conceptions</li>
+					<li>L'implémentation des patrons utilise le <b>polymorphisme dynamique</b> </li>
+				</ul>
+				</small>
+
+			</section>
+
+			<section>
+				<h3>Intérêt du polymorphisme</h3>
+				<p><a href=https://fr.wikipedia.org/wiki/Polymorphisme_(informatique)>Selon Wikipédia</a></p>
+				<small><p>«En proposant d'utiliser un même nom de méthode pour plusieurs types d'objets différents, le polymorphisme permet une programmation beaucoup plus générique. Le développeur n'a pas à savoir, lorsqu'il programme une méthode, le type précis de l'objet sur lequel la méthode va s'appliquer. Il lui suffit de savoir que cet objet implémentera la méthode.»</p></small>
+			</section>
+
+			<section>
+				<p>Polymorphisme statique et dynamique</p>
+				<small>
+				<p>Le polymorphisme peut être distingué par le moment où l'implémentation est sélectionnée: </p>
+				<ul>
+					<li><b>Statiquement</b>: Au moment de la compilation</li>
+					<li><b>Dynamiquement</b>: Au moment de l'exécution (généralement via une fonction virtuelle)</li>
+				</ul>
+				</small>
+
+		
+			</section>
+
+			<section>
+				<h3>Patron itérateur (GoF)</h3>
+				<small><p> Le patron itérateur vous permet d'effectuer une tâche sur une séquence d'éléments. Un itérateur est responsable de la logique du parcours et de la détermination de la fin de la séquence.</p></small>
+            </section>
+
+			<section>
+				<h3>Itérateur (STL)</h3>
+				<small><p> Une fois que nous avons créé un itérateur, nous pouvons l'utiliser de différentes manières. Par exemple nous pouvons utiliser des itérateurs avec des boucles <b>for</b> pour exécuter une tâche sur chacun des éléments.</p></small>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+					std::list &lt;int&gt; l = {3, 5, 9, 7};
+
+					for (auto it = cbegin(l); it !=  cend(l); ++it) {
+						int i = *it;
+						std::cout << i << std::endl;
+					}
+				</code></pre>
+			
+			</section>
+
+			<section>
+				<h3>Itérateur (STL)</h3>
+				<p>Utilisation implicite</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+					std::list &lt;int&gt; l = {3, 5, 9, 7};
+
+					for (auto i: l) {
+						std::cout << i << std::endl;
+					}
+				</code></pre>
+
+			</section>
+
+			<section>
+				<h3>Itérateur (STL)</h3>
+				<small>
+				<ul>
+					<li>Les itérateurs permettent d'utiliser un algorithme indépendamment de la structure de données</li>
+					<li>L'itérateur est l'abstraction centrale de la librairie STL en C++</li>
+				</ul>
+				</small>
+				<br>
+				<br>
+				<img src="./images/STLIterator.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				<small><p></p></small>
+			</section>
+
+			<section>
+				<h3>Itérateur (STL)</h3>
+				<p>Exemple avec l'algorithme <b>std::max_element</b></p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+					std::vector&lt;int&gt; v = {3, 5, 9, 7};
+					std::vector&lt;int&gt;::const_iterator resultat;
+
+					resultat = std::max_element(cbegin(v), cend(v)); //-std=c++17
+					//resultat = std::ranges::max_element(v); //-std=c++20
+					
+					auto position = std::distance(cbegin(v), resultat);
+					std::cout << "position: " << position << std::endl;
+					std::cout << "valeur: " << *resultat << std::endl;
+				</code></pre>
+
+			</section>
+
+
+            
+           
+
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
