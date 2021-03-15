@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Patrons de conception</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/reveal-override.css"/>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			<section>
+				<img src="./images/Alexandrescu.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				<h3>Design Patterns - Partie 2</h3>
+				<p>
+					<small> <span style="color:rgb(50, 80, 119);">Eric Demers, Michel Gagnon et Lévis Thériault</span>    </small>
+				</p>
+            </section>
+            <section>
+				<h3>Patron Visiteur</h3>
+            </section>
+            <section>
+                <p>Considérons une hiérarchie de classes dont vous souhaitez augmenter la fonctionnalité.</p>
+            </section>
+            <section>
+                <h3>Pour ce faire, vous pouvez soit ajouter:</h3>
+                <ul>
+                    <li>de nouvelles classes</li>
+                    <li>de nouvelles méthodes virtuelles</li>
+                </ul>
+            </section>
+            <section>
+                <p>Ajouter de nouvelles classes se fait simplement.</p> 
+                <small><p>Vous dérivez d'une classe et implémentez les fonctions virtuelles nécessaires.</p></small>
+            </section>
+            <section>
+                <p>En revanche, l'ajout de nouvelles méthodes dans une hiérarchie est plus laborieux</p> 
+                <small><p>Pour pouvoir manipuler des objets de manière polymorphique, vous devez ajouter une méthode virtuelle à la classe de base, et possiblement à plusieurs autres classes dans la hiérarchie.</p></small>
+            </section>
+            <section>
+                <p>Supposons: </p>
+                <small><p>Une hiérarchie à laquelle vous ajoutez rarement de nouvelles classes, mais à laquelle vous devez ajouter souvent des méthodes virtuelles.</p></small>
+            </section>
+
+            <section>
+                <p>Par exemple, considérons la hiérarchie de classes</p>
+                <img src="./images/ClassesPrimitives.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+
+            <section>
+                <p>Implémentation en C++</p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                    class Primitive {
+                        public:
+                        virtual ~Primitive() = default;};
+                    
+                    class Carre: public Primitive {
+                        double m_largeur;
+                        public:
+                        Carre(const double& largeur): m_largeur{largeur} {}
+                        double getLargeur() const {return m_largeur;} };
+                    
+                    class Cercle: public Primitive {
+                        double m_rayon;
+                        public:
+                        Cercle(const double& rayon): m_rayon{rayon} {};
+                        double getRayon() const {return m_rayon;}; };
+				</code></pre>
+            </section>
+            <section>
+                <p>Ajouter des méthodes dans une hiérarchie complexe</p>
+                <img src="./images/ThumbsDown.png" style="height: 100px; margin: 0 auto 4rem auto; background: transparent;">
+                <small><p>Implique d'ajouter du code dans toutes les classes dérivées</p></small>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                    class Primitive {
+                        public:
+                        virtual double calculerAire() const = 0;
+                        virtual double CalculerPerimetre() const = 0;
+                        virtual ~Primitive() = default;}
+                    }
+				</code></pre>
+            </section>
+            <section>
+                <h2>S<u>O</u>LID</h2>
+                <p>Une classe doit être à la fois ouverte (à l'extension) et fermée (à la modification)</p>
+            </section>
+
+            <section>
+                <p>Le patron Visiteur </p>
+                <small>
+                    <ul>
+                        <li>Permet d'ajouter facilement de nouvelles méthodes à une hiérarchie de classes</li>
+                        <li>Par contre, un changement de la hiérarchie de classes implique un changement des classes visiteurs</li>
+                    </ul>
+                </small>
+            </section>
+
+            <section>
+                <p>Une première implémentation simple mais pas nécessairement optimale basée sur le:</p>
+                <p>Run-Time Type Information</p>
+                <img src="./images/RTTI.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+
+            <section>
+                <p>RTTI (Run-Time Type Information)</p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                    class CalculerAire {
+                        public:
+                        double calculer(Primitive *p) const {
+                            if (auto carre = dynamic_cast&lt;Carre *&gt;(p)) {
+                                return std::pow(carre->getLargeur(), 2);}
+                            else if (auto cercle = dynamic_cast&lt;Cercle *&gt;(p)) {
+                                return std::pow(cercle->getRayon(), 2) * M_PI;}
+                            else return 0;
+                        };
+                    };
+				</code></pre>
+            </section>
+
+
+            <section>
+                <p>Patron Visiteur (GoF) </p>
+                <img src="./images/Visiteur1.png" style="height: 400px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+
+            <section>
+                <p>Implémentation de la classe abstraite <b>Visiteur</b></p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                    class Visiteur {
+                        public:
+                        virtual double visiter(const Carre *) const = 0;
+                        virtual double visiter(const Cercle *) const = 0; 
+                        virtual ~Visiteur() = default;
+                    };
+				</code></pre>
+                <small><p></p></small>
+            </section>
+
+            <section>
+                <p>Implémentation de la classe concrète <b>CalculerAire</b></p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                class CalculerAire: public Visiteur {
+                    public:
+                    double visiter(const Carre *carre) const  {
+                        return std::pow(carre->getLargeur(), 2);
+                    }
+                    double visiter(const Cercle *cercle) const {
+                        return std::pow(cercle->getRayon(), 2) * M_PI;
+                    }
+                };
+				</code></pre>
+                <small><p></p></small>
+            </section>
+
+            <section>
+                <p> Ajoutez ensuite la méthode <b>accepter</b> à la hiérarchie de classes </p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                    class Primitive {
+                        public:
+                        virtual double accepter(const Visiteur *visiteur) const = 0;
+                        virtual ~Primitive() = default;
+                    };
+
+                    class Carre: public Primitive {
+                        double m_largeur;
+                        public:
+                        Carre(const double& largeur): m_largeur{largeur} {};
+                        double getLargeur() const {return m_largeur;} 
+                        double accepter(const Visiteur *visiteur) const {
+                            return visiteur->visiter(this);}
+                    };
+				</code></pre>
+            </section>
+
+            <section>
+                <p> Utilisez ensuite de cette manière </p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                    Cercle cercle(10);
+                    CalculerAire calculerAire;
+                    double aireDuCercle = cercle.accepter(&calculerAire);
+                    std::cout << aireDuCercle << std::endl;
+				</code></pre>
+            </section>
+
+            <section>
+            <h3>C++17</h3>
+            <p>std::visit</p>
+            <pre data-id="code-animation"><code class="c++" data-trim >
+            #include &lt;iostream&gt;
+            #include &lt;math.h&gt;
+            #include &lt;variant&gt;
+
+            class Carre {
+                double m_largeur;
+                public:
+                Carre(const double& largeur): m_largeur{largeur} {}
+                double getLargeur() const {return m_largeur;} 
+            };
+            
+            class Cercle {
+                double m_rayon;
+                public:
+                Cercle(const double& rayon): m_rayon{rayon} {};
+                double getRayon() const {return m_rayon;};
+            };
+            
+            class CalculerAire {
+                public:
+                double operator()(const Carre &carre) const  {
+                    return std::pow(carre.getLargeur(), 2);
+                }
+                double operator()(const Cercle &cercle) const {
+                    return std::pow(cercle.getRayon(), 2) * M_PI;
+                }
+            };
+            
+            using Forme = std::variant&lt;Cercle, Carre&gt;;
+            
+            int main() {
+                Cercle cercle(10);
+                Forme forme = cercle;
+                CalculerAire calculerAire;
+                double aireDuCercle = std::visit(calculerAire, forme);
+                std::cout << aireDuCercle << std::endl;
+                return EXIT_SUCCESS;
+            }
+            </code></pre>
+            </section>
+
+
+
+
+            
+           
+
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
