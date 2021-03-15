@@ -82,7 +82,7 @@
                 <pre data-id="code-animation"><code class="c++" data-trim >
                     class Primitive {
                         public:
-                        virtual double calculerAire() const = 0;
+                        virtual double calculateurAire() const = 0;
                         virtual double CalculerPerimetre() const = 0;
                         virtual ~Primitive() = default;}
                     }
@@ -112,7 +112,7 @@
             <section>
                 <p>RTTI (Run-Time Type Information)</p>
                 <pre data-id="code-animation"><code class="c++" data-trim >
-                    class CalculerAire {
+                    class CalculateurAire {
                         public:
                         double calculer(Primitive *p) const {
                             if (auto carre = dynamic_cast&lt;Carre *&gt;(p)) {
@@ -145,9 +145,9 @@
             </section>
 
             <section>
-                <p>Implémentation de la classe concrète <b>CalculerAire</b></p>
+                <p>Implémentation de la classe concrète <b>CalculateurAire</b></p>
                 <pre data-id="code-animation"><code class="c++" data-trim >
-                class CalculerAire: public Visiteur {
+                class CalculateurAire: public Visiteur {
                     public:
                     double visiter(const Carre *carre) const  {
                         return std::pow(carre->getLargeur(), 2);
@@ -184,8 +184,8 @@
                 <p> Utilisez ensuite de cette manière </p>
                 <pre data-id="code-animation"><code class="c++" data-trim >
                     Cercle cercle(10);
-                    CalculerAire calculerAire;
-                    double aireDuCercle = cercle.accepter(&calculerAire);
+                    CalculateurAire calculateurAire;
+                    double aireDuCercle = cercle.accepter(&calculateurAire);
                     std::cout << aireDuCercle << std::endl;
 				</code></pre>
             </section>
@@ -212,7 +212,7 @@
                 double getRayon() const {return m_rayon;};
             };
             
-            class CalculerAire {
+            class CalculateurAire {
                 public:
                 double operator()(const Carre &carre) const  {
                     return std::pow(carre.getLargeur(), 2);
@@ -227,8 +227,8 @@
             int main() {
                 Cercle cercle(10);
                 Forme forme = cercle;
-                CalculerAire calculerAire;
-                double aireDuCercle = std::visit(calculerAire, forme);
+                CalculateurAire calculateurAire;
+                double aireDuCercle = std::visit(calculateurAire, forme);
                 std::cout << aireDuCercle << std::endl;
                 return EXIT_SUCCESS;
             }
