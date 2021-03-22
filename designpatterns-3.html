@@ -48,6 +48,7 @@
 				TEST_CASE( "tests pour la classe peinture", "[Peinture]" ) {
 					// Créer une peinture jaune avec un volume de 100
 					Peinture jaune(100.0, 0, 50, 0);
+					
 					// Créer une peinture bleu avec un volume de 100
 					Peinture bleu(100.0, 0, 0, 50);
 				
@@ -71,15 +72,18 @@
 				  int m_r;
 				  int m_j;
 				  int m_b;
+				
 				public:
 				  Peinture(const double& v, 
 					const int& r, 
 					const int& j, 
 					const int& b): m_v{v}, m_r{r}, m_j{j}, m_b{b} {}
+				  
 				  double getV() {return m_v;}
 				  int getR() {return m_r;}
 				  int getJ() {return m_j;}
 				  int getB() {return m_b;}
+
 				  void peinture(const Peinture& p) {
 					m_r = (p.m_r * p.m_v + m_r * m_v) / (p.m_v + m_v);
 					m_j = (p.m_j * p.m_v + m_j * m_v) / (p.m_v + m_v);
@@ -104,6 +108,7 @@
 				TEST_CASE( "tests pour la classe peinture", "[Peinture]" ) {
 				  // Créer une peinture jaune avec un volume de 100
 				  Peinture jaune(100.0, 0, 50, 0);
+				  
 				  // Créer une peinture bleu avec un volume de 100
 				  Peinture bleu(100.0, 0, 0, 50);
 				
@@ -132,9 +137,9 @@
 				#include "../src/peinture.h"
 
 				TEST_CASE( "tests pour la classe Peinture", "[Peinture]" ) {
-			
 				  // Créer une peinture jaune avec un volume de 100
 				  Peinture jaune(100.0, PigmentDeCouleur(0, 50, 0));
+				  
 				  // Créer une peinture bleu avec un volume de 100
 				  Peinture bleu(100.0, PigmentDeCouleur(0, 0, 50));
 				
@@ -156,35 +161,35 @@
 				<pre data-id="code-animation"><code class="c++" data-trim >
 				class PigmentDeCouleur {
 				private:
-				int m_rouge;
-				int m_jaune;
-				int m_bleu;
+				  int m_rouge;
+				  int m_jaune;
+				  int m_bleu;
 			
 				public:
-				PigmentDeCouleur(const int& rouge, 
-					const int& jaune, 
-					const int& bleu): 
-					m_rouge{rouge}, m_jaune{jaune}, m_bleu{bleu} {}
+				  PigmentDeCouleur(const int& rouge, 
+				    const int& jaune, 
+				    const int& bleu): 
+				    m_rouge{rouge}, m_jaune{jaune}, m_bleu{bleu} {}
 				
-				int getRouge() {return m_rouge;}
-				int getJaune() {return m_jaune;}
-				int getBleu() {return m_bleu;}
+				  int getRouge() {return m_rouge;}
+				  int getJaune() {return m_jaune;}
+				  int getBleu() {return m_bleu;}
 
-				PigmentDeCouleur melangerAvec(
-					const PigmentDeCouleur& autrePigment, 
-					const double& ratio) const {
-					return PigmentDeCouleur( 
-					(1 - ratio) * m_rouge + ratio * autrePigment.m_rouge,
-					(1 - ratio) * m_jaune + ratio * autrePigment.m_jaune, 
-					(1 - ratio) * m_bleu  + ratio * autrePigment.m_bleu);   
-				}
+				  PigmentDeCouleur melangerAvec(
+				    const PigmentDeCouleur& autrePigment, 
+				    const double& ratio) const {
+				    return PigmentDeCouleur( 
+				    (1 - ratio) * m_rouge + ratio * autrePigment.m_rouge,
+				    (1 - ratio) * m_jaune + ratio * autrePigment.m_jaune, 
+				    (1 - ratio) * m_bleu  + ratio * autrePigment.m_bleu);   
+				  }
 
-				bool operator==(const PigmentDeCouleur& p) const {
-					bool rouge = (std::abs(m_rouge - p.m_rouge) <= 1);
-					bool jaune = (std::abs(m_jaune - p.m_jaune) <= 1);
-					bool bleu  = (std::abs(m_bleu - p.m_bleu) <= 1);
-					return (rouge && jaune && bleu);
-				}
+				  bool operator==(const PigmentDeCouleur& p) const {
+				    bool rouge = (std::abs(m_rouge - p.m_rouge) <= 1);
+				    bool jaune = (std::abs(m_jaune - p.m_jaune) <= 1);
+				    bool bleu  = (std::abs(m_bleu - p.m_bleu) <= 1);
+				    return (rouge && jaune && bleu);
+				  }
 				};
 				</code></pre>
 			</section>
