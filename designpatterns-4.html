@@ -1,0 +1,260 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Patrons de conception</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/reveal-override.css"/>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			<section>
+				<img src="./images/Alexandrescu.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				<h3>Design Patterns - Partie 4</h3>
+				<p>
+					<small> <span style="color:rgb(50, 80, 119);">Eric Demers, Michel Gagnon et Lévis Thériault</span>    </small>
+				</p>
+            </section>
+            <section>
+				<h3>Patron Singleton</h3>
+                <small><p><a href="http://www.vishalchovatiya.com/singleton-design-pattern-in-modern-cpp/">www.vishalchovatiya.com/singleton-design-pattern-in-modern-cpp</a></p></small>
+            </section>
+
+            <section>
+                <h3>Intention</h3>
+                <p>Assure qu'une classe n'a qu'une seule instance et fournit un point d'accès global.</p>
+            </section>
+            <section>
+                <h3>Avantages et inconvénients</h3>
+				<img src="./images/Singleton01.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+            <section>
+                <p>Attributs statiques + méthodes statiques != Singleton</p>
+                <img src="./images/Singleton04.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+                <small>
+                    <ul>
+                        <li>En C++ une méthode statique ne peut pas être virtuelle.</li>
+                        <li>Il n'y a pas de moment bien déterminé pour l'initialisation et le nettoyage.</li>
+                    </ul>
+                </small>
+            </section>
+            <section>
+                <p>Structure d'une classe Singleton</p>
+                <img src="./images/Singleton02.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+            <section>
+                <p>Structure d'une classe Singleton </p>
+                <img src="./images/Singleton03.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+
+            <section>
+                <p>SingletonGoF.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class SingletonGoF {
+                  private:
+                        static SingletonGoF* pInstance;
+                        SingletonGoF() = default;
+                    public:
+                        static SingletonGoF* Instance(){
+                            if (!pInstance) {
+                                pInstance = new SingletonGoF;
+                            }
+                            return pInstance;
+                        } 
+                };
+				</code></pre>
+                <p>SingletonGoF.cpp</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                #include "SingletonGoF.h"
+
+                SingletonGoF* SingletonGoF::pInstance = nullptr;
+				</code></pre>
+			</section>
+
+            <section>
+                <p>Si un singleton n'est jamais supprimé, s'agit-il alors d'une fuite de mémoire?</p>
+            </section>
+
+            <section>
+            <p>Il est nécessaire d'appeler le destructeur ici à la fin de l'exécution du programme</p>
+            <pre data-id="code-animation"><code class="c++" data-trim >
+            #include &lt;iostream&gt;
+
+            class SingletonGoF {
+            private:
+                static SingletonGoF* pInstance;
+                SingletonGoF() { std::cout << "construction!\n"; }
+            public:
+                ~SingletonGoF()  { std::cout << "destruction!\n"; }
+                static SingletonGoF* Instance(){
+                    if (!pInstance) {
+                        pInstance = new SingletonGoF;
+                    }
+                    return pInstance;
+                }
+                void imprimer() { std::cout << "bouh!\n"; } 
+            };
+            
+            SingletonGoF* SingletonGoF::pInstance = nullptr;
+            
+            
+            int main() {
+                SingletonGoF::Instance()->imprimer();
+                SingletonGoF::Instance()->~SingletonGoF();
+                return 0;
+            }
+            </code></pre>
+			</section>
+
+            <section>
+                <p>Avec le pointeur intelligent, il n'est plus nécessaire d'appeler manuellement le destructeur à la fin de l'exécution du programme</p>
+                <pre data-id="code-animation"><code class="c++" data-trim >
+                #include &lt;iostream&gt;
+                #include &lt;memory&gt;
+                
+                class Singleton {
+                private:
+                    static std::unique_ptr&lt;Singleton&gt; pInstance;
+                    Singleton() { std::cout << "construction!\n"; }
+                public:
+                    ~Singleton()  { std::cout << "destruction!\n"; }
+                    static Singleton* Instance(){
+                        if (pInstance == nullptr) {
+                            pInstance = std::unique_ptr&lt;Singleton&gt;(new Singleton);
+                        }
+                        return pInstance.get();
+                    }
+                    void imprimer() { std::cout << "bouh!\n"; } 
+                };
+                
+                std::unique_ptr&lt;Singleton&gt; Singleton::pInstance(nullptr);
+                
+                int main() {
+                    Singleton::Instance()->imprimer();
+                    return 0;
+                }
+                </code></pre>
+            </section>
+
+            <section>
+                <h3>Scott Meyers, More Effective C++</h3>
+                <p>Item 26: Limiting the number of objects of a class</p>
+            </section>
+
+            <section>
+            <h4>Les objets statiques en C++</h4>
+            <pre data-id="code-animation"><code class="c++" data-trim >
+            #include &lt;iostream&gt;
+            int f() {
+                static int x = 100;
+                return ++x;
+            }
+            int main() {
+                std::cout << f() << ", ";
+                std::cout << f() << ", ";
+                std::cout << f() << std::endl;
+                return EXIT_SUCCESS;
+            }
+            </code></pre>
+            </section>
+
+            <!--
+            <section>
+                <h4>Les objets statiques en C++</h4>
+                <small><p>Bjarn Stoustrup, The C++ Programming Languange Fourth Edition, Page: 167</p></small>
+                <br>
+                <br>
+                <small><ul>
+                    <li>Les éléments déclarés <b>static</b> dans les fonctions ou les classes sont créés et initialisés une fois (seulement) et actifs jusqu'à la fin du programme.</li> 
+                    <li>Ces objets sont appelés objets statiques. Un objet statique a la même adresse pendant toute la durée de l'exécution d'un programme.</li> 
+                </ul></small>
+            </section>
+            -->
+
+            <section>
+                <h3>Les objets statiques en C++</h3>
+                <small><p>Andrei Alexandrescu, Modern C++ Design, Page: 134</p></small>
+                <br>
+                <br>
+                <p>La variable statique est initialisée à l'exécution lors du premier passage à travers sa définition lorsque:</p>
+                <small><ul>
+                    <li>L'initialisation n'est pas une constante qui peut-être déterminée au moment de la compilation.</li> 
+                    <li>La variable statique est un objet qui possède un constructeur.</li>
+                </ul></small>
+            </section>
+
+            <section>
+            <p>SingletonMeyers.h</p>
+            <pre data-id="code-animation"><code class="c++" data-trim >
+            class SingletonMeyers{
+                private:
+                    SingletonMeyers() = default; 
+                    
+                public:
+                    static SingletonMeyers& Instance(){
+                        static SingletonMeyers instanceUnique;
+                        return instanceUnique;
+                    }
+                }; 
+                </code></pre>
+            </section>
+
+            <section>
+            <p>Le destructeur est appelé automatiquement à la fin de l'exécution du programme</p>
+            <pre data-id="code-animation"><code class="c++" data-trim >
+            #include &lt;iostream&gt;
+
+            class Singleton {
+            private:
+                Singleton() { std::cout << "construction!\n"; }
+            
+            public:
+                ~Singleton()  { std::cout << "destruction!\n"; }
+            
+                static Singleton& getInstance() {
+                    static Singleton instance;
+                    return instance;
+                }
+            
+                void imprimer() { std::cout << "bouh!\n"; }
+            };
+            int main() {
+                Singleton::getInstance().imprimer();
+                return 0;
+            }
+            </code></pre>
+            </section>
+
+
+
+
+            
+           
+
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
