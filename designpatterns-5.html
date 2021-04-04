@@ -1,0 +1,244 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Patrons de conception</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/black.css" id="theme">
+		<link rel="stylesheet" href="css/reveal-override.css"/>
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+			<section>
+				<img src="./images/HeadFirst.png" style="height: 300px; margin: 0 auto 4rem auto; background: transparent;">
+				<h3>Design Patterns - Partie 5</h3>
+				<p>
+					<small> <span style="color:rgb(50, 80, 119);">Eric Demers, Michel Gagnon et Lévis Thériault</span>    </small>
+				</p>
+            </section>
+
+            <section>
+                <h4>MVC: Patron de patrons</h4>
+				<img src="./images/MVC.png" style="height: 500px; margin: 0 auto 4rem auto; background: transparent;">
+            </section>
+
+
+            <section>
+                <p>Bouton.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                #include &lt;iostream&gt;
+                #include &lt;functional&gt;
+                #include &lt;string&gt
+                #include &lt;vector&gt;
+                using namespace std;
+                    
+                class Bouton {   
+                private:
+                  using Callback = std::function&lt;void(void)&gt;;
+                  string m_message;
+                  Callback m_callback;
+                    
+                public:
+                  Bouton(const string& message): m_message{message} {}
+                  void setCallback(Callback callback) {m_callback = callback;}
+                  void cliquer() {
+                    cout << "Vous avez cliquez le bouton: " << m_message << endl;
+                    if(m_callback){ 
+                      m_callback();
+                    }
+                  }
+                };
+                    
+                int main() {
+                  Bouton bouton("Cliquer moi");
+                  //bouton.setCallback([]{cout << "Vous avez appelez la fonction callback" << endl;});
+                  bouton.cliquer();
+                  return 0;
+                }
+				</code></pre>
+			</section>
+
+            <section>
+                <p>Modele.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class Modele {
+                private:
+                  int m_nombre;
+                
+                public:
+                  Modele(): m_nombre{10} {}
+                  int getNombre(){ return m_nombre; }
+                  void augmenterLeNombre() { m_nombre += 10; }
+                };
+				</code></pre>
+			</section>
+            <section>
+                <p>Controleur.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class Controleur {
+                private:
+                  Modele& m_modele;
+                
+                public:
+                  Controleur(Modele& modele, Bouton& bouton): m_modele{modele} {
+                    bouton.setCallback([this]{this->lorsqueVousAppuyezSurLeBouton();});
+                  }
+                  void lorsqueVousAppuyezSurLeBouton() {
+                      m_modele.augmenterLeNombre();
+                  }
+                };
+				</code></pre>
+			</section>
+
+            <section>
+                <p>AfficheurNumerique.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class AfficheurNumerique {
+                private:
+                  string m_nom;
+                
+                public:
+                  AfficheurNumerique(const string& nom): m_nom{nom} {}
+                  void afficher(const int& nombre) {
+                    cout << m_nom << " : " << nombre << endl;
+                  }
+                };
+				</code></pre>
+			</section>
+            <section>
+                <p>AfficheurGraphique.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class AfficheurGraphique {
+                private:
+                  string m_nom;
+                
+                public:
+                  AfficheurGraphique(const string& nom): m_nom{nom} {}
+                  void afficher(const int& nombre) {
+                    cout << m_nom << " : " << string(nombre, '*') << endl;
+                  }
+                };
+				</code></pre>
+			</section>
+            <section>
+                <p>Modele.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class Modele {
+                private:
+                  using Callback = std::function&lt;void(int nombre)&gt;;
+                  vector&lt;Callback&gt; m_callbacks;
+                  int m_nombre;
+                
+                public:
+                  Modele(): m_nombre{10} {}
+                  int getNombre(){ return m_nombre; }
+                  void augmenterLeNombre() { 
+                      m_nombre += 10;
+                      notifier(); 
+                  }
+                  void ajouterCallback(Callback callback) {m_callbacks.push_back(callback);}
+                  void notifier() {
+                    for (auto callback: m_callbacks) { callback(m_nombre); }
+                  }
+                };
+				</code></pre>
+			</section>
+            
+            <section>
+                <p>Afficheur.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class AfficheurAbstrait {
+                private:
+                  string m_nom;
+                
+                public:
+                  AfficheurAbstrait(const string& nom): m_nom{nom} {}
+                  virtual void afficher(const int& nombre) = 0;
+                  string getNom() { return m_nom; };
+                  virtual ~AfficheurAbstrait() = default;
+                };
+
+                class AfficheurNumerique: public AfficheurAbstrait {                    
+                public:
+                  AfficheurNumerique(const string& nom): AfficheurAbstrait{nom} {}
+                  void afficher(const int& nombre) override {
+                    cout << getNom() << " : " << nombre << endl;
+                  }
+                };
+
+                class AfficheurGraphique: public AfficheurAbstrait {                    
+                public:
+                  AfficheurGraphique(const string& nom): AfficheurAbstrait{nom} {}
+                  void afficher(const int& nombre) {
+                    cout << getNom() << " : " << string(nombre, '*') << endl;
+                  }
+                };
+				</code></pre>
+			</section>
+
+            <section>
+                <p>Afficheur.h (suite)</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class AfficheurComposite: public AfficheurAbstrait {
+                private:
+                  vector&lt;AfficheurAbstrait*&gt; composants;
+                public:
+                  AfficheurComposite(const string& nom): AfficheurAbstrait{nom} {}
+                  void ajouterComposant(AfficheurAbstrait* composant) {
+                    composants.push_back(composant);
+                  }
+                  void afficher(const int& nombre) {
+                    for(auto composant: composants) {
+                      composant->afficher(nombre);
+                    }
+                  }
+                };
+				</code></pre>
+			</section>
+            <section>
+                <p>Controleur.h</p>
+				<pre data-id="code-animation"><code class="c++" data-trim >
+                class Controleur {
+                private:
+                  Modele& m_modele;
+                
+                public:
+                  Controleur(Modele& modele, Bouton& bouton): m_modele{modele} {
+                    bouton.setCallback([this]{this->lorsqueVousAppuyezSurLeBouton();});
+                  }
+                  void ajouterObservateur(AfficheurAbstrait& afficheur) {
+                    m_modele.ajouterCallback([&afficheur](auto nombre){afficheur.afficher(nombre);});
+                  }
+                  void lorsqueVousAppuyezSurLeBouton() {
+                      m_modele.augmenterLeNombre();
+                  }
+                };
+				</code></pre>
+			</section>
+
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				hash: true,
+				slideNumber: true,
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
+			});
+		</script>
+	</body>
+</html>
