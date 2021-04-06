@@ -128,29 +128,7 @@
                 };
 				</code></pre>
 			</section>
-            <section>
-                <p>Modele.h</p>
-				<pre data-id="code-animation"><code class="c++" data-trim >
-                class Modele {
-                private:
-                  using Callback = std::function&lt;void(int nombre)&gt;;
-                  vector&lt;Callback&gt; m_callbacks;
-                  int m_nombre;
-                
-                public:
-                  Modele(): m_nombre{10} {}
-                  int getNombre(){ return m_nombre; }
-                  void augmenterLeNombre() { 
-                      m_nombre += 10;
-                      notifier(); 
-                  }
-                  void ajouterCallback(Callback callback) {m_callbacks.push_back(callback);}
-                  void notifier() {
-                    for (auto callback: m_callbacks) { callback(m_nombre); }
-                  }
-                };
-				</code></pre>
-			</section>
+            
             
             <section>
                 <p>Afficheur.h</p>
@@ -203,6 +181,32 @@
                 };
 				</code></pre>
 			</section>
+
+
+      <section>
+        <p>Modele.h</p>
+        <pre data-id="code-animation"><code class="c++" data-trim >
+                class Modele {
+                private:
+                  using Callback = std::function&lt;void(int nombre)&gt;;
+                  vector&lt;Callback&gt; m_callbacks;
+                  int m_nombre;
+                
+                public:
+                  Modele(): m_nombre{10} {}
+                  int getNombre(){ return m_nombre; }
+                  void augmenterLeNombre() { 
+                      m_nombre += 10;
+                      notifier(); 
+                  }
+                  void ajouterCallback(Callback callback) {m_callbacks.push_back(callback);}
+                  void notifier() {
+                    for (auto callback: m_callbacks) { callback(m_nombre); }
+                  }
+                };
+        </code></pre>
+        </section>
+
             <section>
                 <p>Controleur.h</p>
 				<pre data-id="code-animation"><code class="c++" data-trim >
