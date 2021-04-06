@@ -50,7 +50,7 @@
                   Bouton(const string& message): m_message{message} {}
                   void setCallback(Callback callback) {m_callback = callback;}
                   void cliquer() {
-                    cout << "Vous avez cliquez le bouton: " << m_message << endl;
+                    cout << "Vous avez clique le bouton: " << m_message << endl;
                     if(m_callback){ 
                       m_callback();
                     }
@@ -58,8 +58,8 @@
                 };
                     
                 int main() {
-                  Bouton bouton("Cliquer moi");
-                  //bouton.setCallback([]{cout << "Vous avez appelez la fonction callback" << endl;});
+                  Bouton bouton("Cliquez moi");
+                  //bouton.setCallback([]{cout << "Vous avez appele la fonction callback" << endl;});
                   bouton.cliquer();
                   return 0;
                 }
